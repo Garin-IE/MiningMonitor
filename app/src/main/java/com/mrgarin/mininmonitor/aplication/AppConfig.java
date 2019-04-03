@@ -10,6 +10,6 @@ public class AppConfig {
     /******************************** end of Basses URL's ***************************************/
 
     /******************************** Debug options *********************************************/
-    public static final boolean write_debug_save_on_sd = true;
+    public static final boolean write_debug_save_on_sd = false;
     /******************************** end of debug options***************************************/
 }
