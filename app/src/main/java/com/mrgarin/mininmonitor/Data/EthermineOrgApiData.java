@@ -1,5 +1,7 @@
 package com.mrgarin.mininmonitor.Data;
 
+import android.util.Log;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,6 +29,10 @@ public class EthermineOrgApiData {
 
         @JsonProperty("activeWorkers")
         protected int activeWorkers;
+
+        @JsonProperty("unpaid")
+        protected long unpaid;
+
     }
 
     public float getCurrentHashRate(){
@@ -43,5 +49,11 @@ public class EthermineOrgApiData {
 
     public String getStatus(){
         return status;
+    }
+
+    public float getUnpaid(){
+        long tempLong  = dataResponse.unpaid/1000000000;
+        float temp = (float) tempLong/1000000000;
+        return temp;
     }
 }

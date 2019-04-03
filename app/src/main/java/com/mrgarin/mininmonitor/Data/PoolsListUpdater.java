@@ -42,6 +42,10 @@ public class PoolsListUpdater extends AsyncTask<List<BasicPoolElement>, Void, Li
                             pools.get(i).setAvgHashRate(tempElement.getAvgHashRate());
                             pools.get(i).setActiveWorkers(tempElement.getWorkersActive());
                             pools.get(i).setInActiveWorkers(tempElement.getWorkersInActive());
+                            btcComApiDataCall = new BTCcomLoader().getBtcComApi().getEarnStats(element.getAccess_key(), element.getPuid());
+                            tempElement = btcComApiDataCall.execute().body();
+                            pools.get(i).setBalance(tempElement.getUnpaidBalance()/100000000);
+                            //Log.d("myLogs", String.valueOf(tempElement.getUnpaidBalance()/100000000));
                         }catch (Exception e) {
                             e.printStackTrace();
                             Log.d("myLogs", "error in async: " + e.toString());
@@ -57,6 +61,7 @@ public class PoolsListUpdater extends AsyncTask<List<BasicPoolElement>, Void, Li
                             pools.get(i).setActiveWorkers(tempElement.getActiveWorkers());
                             pools.get(i).setCurrentHashRate(tempElement.getCurrentHashRate());
                             pools.get(i).setAvgHashRate(tempElement.getAvgHashRate());
+                            pools.get(i).setBalance(tempElement.getUnpaid());
                         }catch (Exception e) {
                             e.printStackTrace();
                         }

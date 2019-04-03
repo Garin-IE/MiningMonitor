@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mrgarin.mininmonitor.Data.EthermineOrgElement;
+import com.mrgarin.mininmonitor.Interfaces.OnAdvanceElementShow;
 import com.mrgarin.mininmonitor.Interfaces.PoolTouchHelperAdapter;
+import com.mrgarin.mininmonitor.MiningDashboard;
 import com.mrgarin.mininmonitor.R;
 
 import java.text.DecimalFormat;
@@ -23,12 +26,20 @@ public class PoolsAdapter extends RecyclerView.Adapter<PoolsAdapter.ViewHolder> 
 
     private List<BasicPoolElement> pools;
     private LayoutInflater inflater;
+    private Context context;
+    private OnAdvanceElementShow advanceElementShow;
 
     DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
     public PoolsAdapter(Context context, List<BasicPoolElement> pools){
         this.inflater = LayoutInflater.from(context);
         this.pools = pools;
+        this.context = context;
+    }
+
+    public PoolsAdapter(Context context, List<BasicPoolElement> pools, OnAdvanceElementShow advanceElementShow){
+        this(context, pools);
+        this.advanceElementShow = advanceElementShow;
     }
 
     @NonNull
@@ -47,7 +58,7 @@ public class PoolsAdapter extends RecyclerView.Adapter<PoolsAdapter.ViewHolder> 
         switch (element.getPoolName()){
             case "BTC.com":
                 BTCcomElement btCcomElement = (BTCcomElement) element;
-                //viewHolder.tv_pool_name.setText(element.getPoolName() + " subaccount: " + btCcomElement.getSubAccountName() + " coin: " + btCcomElement.getCoinName());
+                viewHolder.tv_pool_name.setText(element.getPoolName() + " subaccount: " + btCcomElement.getSubAccountName() + " coin: " + btCcomElement.getCoinName());
                 viewHolder.tv_current_hashrate.setText(String.valueOf(btCcomElement.getCurrentHashRate()));
                 viewHolder.tv_avg_hashrate.setText(String.valueOf(btCcomElement.getAvgHashRate()));
                 viewHolder.tv_active_workers.setText(String.valueOf(btCcomElement.getActiveWorkers()));
@@ -56,6 +67,7 @@ public class PoolsAdapter extends RecyclerView.Adapter<PoolsAdapter.ViewHolder> 
 
             case "Ethermine.org":
                 EthermineOrgElement ethermineOrgElement = (EthermineOrgElement) element;
+                viewHolder.tv_pool_name.setText(ethermineOrgElement.getPoolName() + " Wallet: " + ethermineOrgElement.getWalletAdress());
                 viewHolder.tv_current_hashrate.setText(decimalFormat.format(ethermineOrgElement.getCurrentHashRate()));
                 viewHolder.tv_avg_hashrate.setText(decimalFormat.format(ethermineOrgElement.getAvgHashRate()));
                 viewHolder.tv_active_workers.setText(String.valueOf(ethermineOrgElement.getActiveWorkers()));
@@ -90,7 +102,7 @@ public class PoolsAdapter extends RecyclerView.Adapter<PoolsAdapter.ViewHolder> 
         notifyItemRemoved(position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView tv_current_hashrate;
         TextView tv_avg_hashrate;
         TextView tv_active_workers;
@@ -99,11 +111,17 @@ public class PoolsAdapter extends RecyclerView.Adapter<PoolsAdapter.ViewHolder> 
 
         ViewHolder(View view){
             super(view);
+            view.setOnClickListener(this);
             tv_current_hashrate = view.findViewById(R.id.tv_rth);
             tv_avg_hashrate = view.findViewById(R.id.tv_avgh);
             tv_active_workers = view.findViewById(R.id.tv_act_m);
             tv_inactive_workers = view.findViewById(R.id.tv_inact_m);
             tv_pool_name = view.findViewById(R.id.pool_name);
+        }
+
+        @Override
+        public void onClick(View v) {
+            advanceElementShow.onAdvanceElementShow(getAdapterPosition());
         }
     }
 

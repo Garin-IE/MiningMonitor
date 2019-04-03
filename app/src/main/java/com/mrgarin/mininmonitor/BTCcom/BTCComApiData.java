@@ -33,7 +33,11 @@ public class BTCComApiData {
             protected float hashRate;
         }
 
+        @JsonProperty("unpaid")
+        protected float unpaidBalance;
     }
+
+
 
     public float getCurrentHashRate(){
         return dataResponce.currentHashRate.hashRate;
@@ -55,6 +59,13 @@ public class BTCComApiData {
         return err;
     }
 
+    public float getUnpaidBalance(){
+        return dataResponce.unpaidBalance;
+    }
+
+    public void setUnpaidBalance(float balance){
+        dataResponce.unpaidBalance = balance/100000000;
+    }
 }
 
 

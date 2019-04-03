@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Choice SubAccount"
         android:gravity="center_horizontal"
-        android:textSize="15dp"/>
+        android:textSize="25dp"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/simple_rv_list"

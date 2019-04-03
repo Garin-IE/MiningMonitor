@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mrgarin.mininmonitor.aplication.AppConfig;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -44,21 +45,20 @@ public class PoolsInstanceState {
             Log.d("myLogs", "Error: " + e.toString());
         }
 
-        /*
-        File sdPath = Environment.getExternalStorageDirectory();
-        sdPath = new File(sdPath.getAbsolutePath());
-        sdPath.mkdirs();
-        File sdFile = new File(sdPath, "test.txt");
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(sdFile));
-            mapper.writeValue(bufferedWriter, house);
-            bufferedWriter.close();
-        } catch (Exception e){
-            e.printStackTrace();
-            Log.d("myLogs", "Error: " + e.toString());
+        if (AppConfig.write_debug_save_on_sd) {
+            File sdPath = Environment.getExternalStorageDirectory();
+            sdPath = new File(sdPath.getAbsolutePath());
+            sdPath.mkdirs();
+            File sdFile = new File(sdPath, "test.txt");
+            try {
+                BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(sdFile));
+                mapper.writeValue(bufferedWriter, house);
+                bufferedWriter.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.d("myLogs", "Error: " + e.toString());
+            }
         }
-        */
-
     }
 
     public List<BasicPoolElement> loadInstance(){

@@ -19,7 +19,7 @@ public class BasicPoolElement {
     @JsonIgnore
     protected float avgHashRate;
     @JsonIgnore
-    protected double balance;
+    protected float balance;
     protected String poolName;
     @JsonIgnore
     protected int activeWorkers;
@@ -48,11 +48,11 @@ public class BasicPoolElement {
         }
     }
 
-    public double getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(float balance) {
         if (balance >= 0) {
             this.balance = balance;
         }

@@ -8,4 +8,8 @@ public class AppConfig {
     public static final String baseurl_ethermineorg = "https://api.ethermine.org";
 
     /******************************** end of Basses URL's ***************************************/
+
+    /******************************** Debug options *********************************************/
+    public static final boolean write_debug_save_on_sd = true;
+    /******************************** end of debug options***************************************/
 }

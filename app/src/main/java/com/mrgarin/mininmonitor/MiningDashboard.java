@@ -2,6 +2,8 @@ package com.mrgarin.mininmonitor;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -31,6 +33,7 @@ import com.mrgarin.mininmonitor.Data.EthermineOrgLoader;
 import com.mrgarin.mininmonitor.Data.PoolsInstanceState;
 import com.mrgarin.mininmonitor.Data.PoolsListUpdater;
 
+import com.mrgarin.mininmonitor.Interfaces.OnAdvanceElementShow;
 import com.mrgarin.mininmonitor.Interfaces.OnPoolAdd;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,8 +41,10 @@ import retrofit2.Response;
 
 public class MiningDashboard extends AppCompatActivity implements View.OnClickListener,
         OnPoolAdd, BTCcomLoader.OnBTCComPoolAdd, SwipeRefreshLayout.OnRefreshListener,
-        EthermineOrgLoader.OnEthermineOrgPoolAdd {
+        EthermineOrgLoader.OnEthermineOrgPoolAdd, OnAdvanceElementShow {
 
+    final static int AUTO_UPDATE_MSG = 1000;
+    final static int BTC_COM_GET_BALANCE = 1001;
 
     BTCcomLoader btCcomLoader = new BTCcomLoader();
     FloatingActionButton fab_add;
@@ -49,6 +54,29 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     PoolsAdapter poolsAdapter;
     PoolsInstanceState poolsInstanceState;
     SwipeRefreshLayout refreshLayout;
+    Handler handler;
+
+    Handler.Callback handlerCallback = new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case AUTO_UPDATE_MSG:
+                    if (pools != null && pools.size() > 0){
+                        PoolsListUpdater updater = new PoolsListUpdater(new PoolsListUpdater.DataResult() {
+                            @Override
+                            public void result(List<BasicPoolElement> pools) {
+                                setPools(pools);
+                            }
+                        });
+                        updater.execute(pools);
+                        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
+                        Log.d("myLogs", "Auto updater handler message posted");
+                        break;
+                    }
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +88,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         fab_add_dialog = new FabAddDialog();
 
         poolsView = findViewById(R.id.rv_Dashboard);
-        poolsAdapter = new PoolsAdapter(this, pools);
+        poolsAdapter = new PoolsAdapter(this, pools, this);
         poolsView.setAdapter(poolsAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         poolsView.setLayoutManager(layoutManager);
@@ -90,6 +118,10 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
             }
         });
         updater.execute(pools);
+
+        handler = new Handler(handlerCallback);
+        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
+        Log.d("myLogs", "Auto updater handler message posted");
     }
 
     @Override
@@ -118,13 +150,27 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onBTCComPoolAdd(final BTCcomElement element) {
         Call<BTCComApiData> btcComApiDataCall = btCcomLoader.getBtcComApi().getElement(element.getAccess_key(), element.getPuid());
+        final Call<BTCComApiData> btcComApiDataCall2 = btCcomLoader.getBtcComApi().getEarnStats(element.getAccess_key(), element.getPuid());
         btcComApiDataCall.enqueue(new Callback<BTCComApiData>() {
             @Override
             public void onResponse(Call<BTCComApiData> call, Response<BTCComApiData> response) {
                 if (response.body().getErr().contentEquals("0")) {
                     element.initData(response.body().getWorkersActive(), response.body().getWorkersInActive(), response.body().getAvgHashRate(), response.body().getCurrentHashRate());
-                    pools.add(element);
-                    poolsAdapter.notifyDataSetChanged();
+                    btcComApiDataCall2.enqueue(new Callback<BTCComApiData>() {
+                        @Override
+                        public void onResponse(Call<BTCComApiData> call, Response<BTCComApiData> response) {
+                            if (response.body().getErr().contentEquals("0")){
+                                element.setBalance(response.body().getUnpaidBalance()/100000000);
+                                pools.add(element);
+                                poolsAdapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<BTCComApiData> call, Throwable t) {
+
+                        }
+                    });
                     Log.d("myLogs", "pool name: " + element.getPoolName() + " Active workers: " + element.getActiveWorkers() + " InActive Workers: " + element.getInActiveWorkers() + " Current HashRate: " + element.getCurrentHashRate() + " Avg HashRate: " + element.getAvgHashRate());
                     Log.d("myLogs", "pools size: " + pools.size());
                 }
@@ -149,6 +195,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<EthermineOrgApiData> call, Response<EthermineOrgApiData> response) {
                 if (response.body().getStatus().equals("OK")){
                     element.init(response.body().getAvgHashRate(), response.body().getCurrentHashRate(), response.body().getActiveWorkers());
+                    element.setBalance(response.body().getUnpaid());
                     pools.add(element);
                     poolsAdapter.notifyDataSetChanged();
                 }
@@ -180,5 +227,15 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
             }
         });
         updater.execute(pools);
+    }
+
+    @Override
+    public void onAdvanceElementShow(int i) {
+        DialogFragment advanceElementView = new AdvanceViewElementDialog();
+        Bundle bundle = new Bundle();
+        bundle.putInt("element position", i);
+        advanceElementView.setArguments(bundle);
+        advanceElementView.show(getSupportFragmentManager(),"Advance");
+        //Toast.makeText(this, "Выбран: " + pools.get(i).getPoolName(), Toast.LENGTH_LONG).show();
     }
 }

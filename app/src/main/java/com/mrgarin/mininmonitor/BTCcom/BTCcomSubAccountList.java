@@ -79,7 +79,7 @@ public class BTCcomSubAccountList extends DialogFragment {
         //puidNames = new ArrayList<>();
         puidList = new ArrayList<>();
         adapter = new Adapter(getContext(), puidList);
-        recyclerView.addItemDecoration(new PoolsViewOffsetDecoration(20));
+        recyclerView.addItemDecoration(new PoolsViewOffsetDecoration(50));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         return v;

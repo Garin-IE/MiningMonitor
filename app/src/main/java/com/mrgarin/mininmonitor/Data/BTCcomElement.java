@@ -12,6 +12,9 @@ public class BTCcomElement extends BasicPoolElement {
     protected String puid;
     protected String coinName;
     protected String subAccountName;
+    protected float alert_MinCurrentHashrate;
+    protected float alert_MinAvgHashrate;
+    protected int alert_ActiveWorkers;
 
     public BTCcomElement(){}
 
@@ -63,6 +66,7 @@ public class BTCcomElement extends BasicPoolElement {
         setCurrentHashRate(currentHashRate);
     }
 
+    @JsonProperty("coinName")
     public void setCoinName(String coinName) {
         this.coinName = coinName;
     }
@@ -71,7 +75,39 @@ public class BTCcomElement extends BasicPoolElement {
         return coinName;
     }
 
+    @JsonProperty("subaccountName")
+    public void setSubAccountName(String subAccountName) {
+        this.subAccountName = subAccountName;
+    }
+
     public String getSubAccountName(){
         return subAccountName;
     }
+
+    @JsonProperty("HashrateAlert")
+    public void setAlert_MinCurrentHashrate(float alert_MinCurrentHashrate) {
+        this.alert_MinCurrentHashrate = alert_MinCurrentHashrate;
+    }
+
+    public float getAlert_MinCurrentHashrate() {
+        return alert_MinCurrentHashrate;
+    }
+
+    public void setAlert_MinAvgHashrate(float alert_MinAvgHashrate) {
+        this.alert_MinAvgHashrate = alert_MinAvgHashrate;
+    }
+
+    public float getAlert_MinAvgHashrate() {
+        return alert_MinAvgHashrate;
+    }
+
+    public int getAlert_ActiveWorkers() {
+        return alert_ActiveWorkers;
+    }
+
+    @JsonProperty("WorkersAlert")
+    public void setAlert_ActiveWorkers(int alert_ActiveWorkers) {
+        this.alert_ActiveWorkers = alert_ActiveWorkers;
+    }
+
 }
