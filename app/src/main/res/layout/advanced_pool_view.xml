@@ -60,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:text="0"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/advancedPoolview_inActiveMiners"
@@ -72,7 +72,7 @@
         android:id="@+id/advancedPoolview_inActiveMiners"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:text="0"
         android:textAlignment="center"
@@ -184,11 +184,10 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="TextView"
+        android:text="Hash rate"
         app:layout_constraintBottom_toBottomOf="@+id/advancedPoolview_currentHashrate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        tools:text="Hash rate" />
+        app:layout_constraintTop_toTopOf="@+id/textView11" />
 
     <TextView
         android:id="@+id/textView11"
@@ -196,13 +195,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="TextView"
+        android:text="Current"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/textView12"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/advancedPoolview_activeMiners"
-        tools:text="Current" />
+        app:layout_constraintTop_toBottomOf="@+id/advancedPoolview_activeMiners" />
 
     <TextView
         android:id="@+id/textView12"
@@ -210,20 +208,19 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:text="TextView"
+        android:text="24 hours avg"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/advancedPoolview_inActiveMiners"
-        tools:text="24 hours avg" />
+        app:layout_constraintTop_toBottomOf="@+id/advancedPoolview_inActiveMiners" />
 
     <TextView
         android:id="@+id/advancedPoolview_currentHashrate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/advancedPoolview_avgHashrate"
@@ -235,7 +232,7 @@
         android:id="@+id/advancedPoolview_avgHashrate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
         android:text="TextView"
         android:textAlignment="center"

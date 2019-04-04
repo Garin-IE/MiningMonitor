@@ -12,4 +12,8 @@ public class AppConfig {
     /******************************** Debug options *********************************************/
     public static final boolean write_debug_save_on_sd = false;
     /******************************** end of debug options***************************************/
+
+    /******************************** Constants  ************************************************/
+    public static final String ALERT_NOTIFICATION_CHANEL = "Alert notifications";
+    /******************************** end of Constants ******************************************/
 }

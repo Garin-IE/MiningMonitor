@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mrgarin.mininmonitor.Adapters.NotificationHelper;
 import com.mrgarin.mininmonitor.Adapters.PoolTouchHelperCallback;
 import com.mrgarin.mininmonitor.Adapters.PoolsAdapter;
 import com.mrgarin.mininmonitor.Adapters.PoolsViewOffsetDecoration;
@@ -45,6 +46,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
 
     final static int AUTO_UPDATE_MSG = 1000;
     final static int BTC_COM_GET_BALANCE = 1001;
+    NotificationHelper notificationHelper;
 
     BTCcomLoader btCcomLoader = new BTCcomLoader();
     FloatingActionButton fab_add;
@@ -71,6 +73,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
                         updater.execute(pools);
                         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
                         Log.d("myLogs", "Auto updater handler message posted");
+                        notificationHelper.checkForAlerts(pools);
                         break;
                     }
             }
@@ -82,6 +85,8 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mining_dashboard);
+
+        notificationHelper = new NotificationHelper(this);
 
         fab_add = findViewById(R.id.fab_add);
         fab_add.setOnClickListener(this);
@@ -122,6 +127,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         handler = new Handler(handlerCallback);
         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
         Log.d("myLogs", "Auto updater handler message posted");
+
     }
 
     @Override

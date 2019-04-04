@@ -3,6 +3,7 @@ package com.mrgarin.mininmonitor.Data;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.mrgarin.mininmonitor.Adapters.NotificationHelper;
 import com.mrgarin.mininmonitor.BTCcom.BTCComApiData;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class PoolsListUpdater extends AsyncTask<List<BasicPoolElement>, Void, Li
                             btcComApiDataCall = new BTCcomLoader().getBtcComApi().getEarnStats(element.getAccess_key(), element.getPuid());
                             tempElement = btcComApiDataCall.execute().body();
                             pools.get(i).setBalance(tempElement.getUnpaidBalance()/100000000);
-                            //Log.d("myLogs", String.valueOf(tempElement.getUnpaidBalance()/100000000));
+
                         }catch (Exception e) {
                             e.printStackTrace();
                             Log.d("myLogs", "error in async: " + e.toString());

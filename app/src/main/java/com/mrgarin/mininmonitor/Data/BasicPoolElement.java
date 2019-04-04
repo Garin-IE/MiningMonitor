@@ -50,6 +50,7 @@ public class BasicPoolElement {
 
     public float getBalance() {
         return balance;
+        //return (float) 0.00000001;
     }
 
     public void setBalance(float balance) {

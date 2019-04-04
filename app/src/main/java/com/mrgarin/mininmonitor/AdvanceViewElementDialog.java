@@ -60,7 +60,8 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
                 title.setText(element.getPoolName() + " Subaccount: " + element.getSubAccountName() + " Coin: " + element.getCoinName());
                 activeMiners.setText(String.valueOf(element.getActiveWorkers()));
                 inactiveMiners.setText(String.valueOf(element.getInActiveWorkers()));
-                balance.setText(String.valueOf(element.getBalance()));
+                balance.setText(String.format("%.8f", element.getBalance()));
+                //balance.setText(String.valueOf(element.getBalance()));
                 currentHashrate.setText(String.valueOf(element.getCurrentHashRate()));
                 avgHashrate.setText(String.valueOf(element.getAvgHashRate()));
                 hashrateAlert.setText(String.valueOf(element.getAlert_MinCurrentHashrate()));
@@ -72,7 +73,8 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
                 title.setText(ethermineOrgElement.getPoolName() + " Wallet: " + ethermineOrgElement.getWalletAdress());
                 activeMiners.setText(String.valueOf(ethermineOrgElement.getActiveWorkers()));
                 inactiveMiners.setText(String.valueOf(ethermineOrgElement.getInActiveWorkers()));
-                balance.setText(String.valueOf(ethermineOrgElement.getBalance()));
+                balance.setText(String.format("%.8f", ethermineOrgElement.getBalance()));
+                //balance.setText(String.valueOf(ethermineOrgElement.getBalance()));
                 currentHashrate.setText(String.valueOf(ethermineOrgElement.getCurrentHashRate()));
                 avgHashrate.setText(String.valueOf(ethermineOrgElement.getAvgHashRate()));
                 hashrateAlert.setText(String.valueOf(ethermineOrgElement.getAlert_MinCurrentHashrate()));
