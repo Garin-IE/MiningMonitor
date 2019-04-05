@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+
 @JsonAutoDetect
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EthermineOrgElement extends BasicPoolElement {
@@ -12,6 +14,7 @@ public class EthermineOrgElement extends BasicPoolElement {
     protected float alert_MinCurrentHashrate;
     @JsonProperty("WorkersAlert")
     protected int alert_ActiveWorkers;
+    protected ArrayList<Worker> workers = new ArrayList<>();
 
     EthermineOrgElement(){}
 
@@ -48,6 +51,20 @@ public class EthermineOrgElement extends BasicPoolElement {
 
     public void setAlert_ActiveWorkers(int alert_ActiveWorkers) {
         this.alert_ActiveWorkers = alert_ActiveWorkers;
+    }
+
+    protected class Worker{
+        protected String workerName;
+        protected float workerCurrentHashrate, workerAvgHashrate;
+    }
+
+    public ArrayList<Worker> getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(ArrayList<Worker> workers) {
+        this.workers.clear();
+        this.workers.addAll(workers);
     }
 }
 

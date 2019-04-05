@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mrgarin.mininmonitor.Data.BTCcomElement;
 import com.mrgarin.mininmonitor.Data.BasicPoolElement;
@@ -23,6 +24,7 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
     private int element_id;
     private ArrayList<BasicPoolElement> pools = new ArrayList<>();
     private Bundle bundle;
+    private boolean alertsFlag = false;
 
     private TextView title, activeMiners, inactiveMiners, balance, currentHashrate, avgHashrate;
     private EditText minersAlert, hashrateAlert;
@@ -92,24 +94,30 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
             case "BTC.com":
                 BTCcomElement btCcomElement = (BTCcomElement) miningDashboard.pools.get(element_id);
                 if (!hashrateAlert.getText().toString().isEmpty()){
+                    if (Float.valueOf(hashrateAlert.getText().toString()) != btCcomElement.getAlert_MinCurrentHashrate()) alertsFlag = true;
                     btCcomElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
                 }
                 if (!minersAlert.getText().toString().isEmpty()){
+                    if (Integer.valueOf(minersAlert.getText().toString()) != btCcomElement.getAlert_ActiveWorkers()) alertsFlag = true;
                     btCcomElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
                 }
                 break;
             case "Ethermine.org":
                 EthermineOrgElement ethermineOrgElement = (EthermineOrgElement) miningDashboard.pools.get(element_id);
                 if (!hashrateAlert.getText().toString().isEmpty()){
+                    if (Float.valueOf(hashrateAlert.getText().toString()) != ethermineOrgElement.getAlert_MinCurrentHashrate()) alertsFlag = true;
                     ethermineOrgElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
                 }
                 if (!minersAlert.getText().toString().isEmpty()){
+                    if (Integer.valueOf(minersAlert.getText().toString()) != ethermineOrgElement.getAlert_ActiveWorkers()) alertsFlag = true;
                     ethermineOrgElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
                 }
                 break;
             default:
                 break;
         }
+        if (alertsFlag) Toast.makeText(getContext(), "Alerts seted", Toast.LENGTH_SHORT).show();
+        alertsFlag = false;
     }
 
     private MiningDashboard miningDashboard;

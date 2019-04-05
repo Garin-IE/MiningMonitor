@@ -26,6 +26,9 @@ public class BasicPoolElement {
     @JsonIgnore
     protected int inActiveWorkers;
 
+    @JsonProperty("userPoolName")
+    protected String userPoolName;
+
     public BasicPoolElement(){}
 
     public Float getCurrentHashRate() {
@@ -88,5 +91,13 @@ public class BasicPoolElement {
         if (inActiveWorkers >= 0) {
             this.inActiveWorkers = inActiveWorkers;
         }
+    }
+
+    public String getUserPoolName() {
+        return userPoolName;
+    }
+
+    public void setUserPoolName(String userPoolName) {
+        this.userPoolName = userPoolName;
     }
 }
