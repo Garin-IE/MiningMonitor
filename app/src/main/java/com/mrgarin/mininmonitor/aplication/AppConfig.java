@@ -16,4 +16,8 @@ public class AppConfig {
     /******************************** Constants  ************************************************/
     public static final String ALERT_NOTIFICATION_CHANEL = "Alert notifications";
     /******************************** end of Constants ******************************************/
+
+    /******************************** Global Values *********************************************/
+    public static int autoUpdateTime = 10 * 60 * 1000;
+    /******************************** end og Global Values **************************************/
 }

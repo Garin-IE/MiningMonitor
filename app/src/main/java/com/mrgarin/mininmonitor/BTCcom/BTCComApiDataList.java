@@ -37,9 +37,14 @@ public class BTCComApiDataList {
 
         @JsonProperty("coin_type")
         public String coinName;
+
+        @JsonProperty("worker_name")
+        public String workerName;
     }
 
-
+    public ArrayList<BTCComApiDataResponseList> getDataResponseLists(){
+        return dataResponseLists;
+    }
 
     public String getErr(){
         return err;

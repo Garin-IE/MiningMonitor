@@ -1,6 +1,7 @@
 package com.mrgarin.mininmonitor;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ import com.mrgarin.mininmonitor.Data.PoolsListUpdater;
 
 import com.mrgarin.mininmonitor.Interfaces.OnAdvanceElementShow;
 import com.mrgarin.mininmonitor.Interfaces.OnPoolAdd;
+import com.mrgarin.mininmonitor.aplication.AppConfig;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,6 +61,8 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     PoolsInstanceState poolsInstanceState;
     SwipeRefreshLayout refreshLayout;
     Handler handler;
+    Intent intent;
+    String intentAction;
 
     Handler.Callback handlerCallback = new Handler.Callback() {
         @Override
@@ -71,7 +77,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                         updater.execute(pools);
-                        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
+                        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
                         Log.d("myLogs", "Auto updater handler message posted");
                         notificationHelper.checkForAlerts(pools);
                         break;
@@ -125,9 +131,15 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         updater.execute(pools);
 
         handler = new Handler(handlerCallback);
-        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, 300000);
+        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
         Log.d("myLogs", "Auto updater handler message posted");
 
+        intent = getIntent();
+        intentAction = intent.getAction();
+        if (!intentAction.equals("android.intent.action.MAIN")) {
+            onPendingIntentRecived(intentAction);
+            Log.d("myLogs", intentAction);
+        }
     }
 
     @Override
@@ -243,5 +255,9 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         advanceElementView.setArguments(bundle);
         advanceElementView.show(getSupportFragmentManager(),"Advance");
         //Toast.makeText(this, "Выбран: " + pools.get(i).getPoolName(), Toast.LENGTH_LONG).show();
+    }
+
+    public void onPendingIntentRecived(String intentAction){
+        onAdvanceElementShow(Integer.valueOf(intentAction));
     }
 }

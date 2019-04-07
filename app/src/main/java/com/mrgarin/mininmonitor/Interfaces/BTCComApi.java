@@ -2,6 +2,7 @@ package com.mrgarin.mininmonitor.Interfaces;
 
 import com.mrgarin.mininmonitor.BTCcom.BTCComApiData;
 import com.mrgarin.mininmonitor.BTCcom.BTCComApiDataList;
+import com.mrgarin.mininmonitor.BTCcom.BTCComApiDataObjectList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,4 +19,8 @@ public interface BTCComApi {
 
     @GET("account/earn-stats")
     Call<BTCComApiData> getEarnStats(@Query("access_key") String access_key, @Query("puid") String puid);
+
+    @GET("worker")
+    Call<BTCComApiDataObjectList> getWorkers(@Query("access_key") String access_key, @Query("puid") String puid);
+    
 }
