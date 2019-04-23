@@ -18,6 +18,6 @@ public class AppConfig {
     /******************************** end of Constants ******************************************/
 
     /******************************** Global Values *********************************************/
-    public static int autoUpdateTime = 10 * 60 * 1000;
+    public static int autoUpdateTime = 1 * 60 * 1000;
     /******************************** end og Global Values **************************************/
 }

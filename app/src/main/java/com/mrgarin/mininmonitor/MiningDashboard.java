@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -259,5 +260,11 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
 
     public void onPendingIntentRecived(String intentAction){
         onAdvanceElementShow(Integer.valueOf(intentAction));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.options_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

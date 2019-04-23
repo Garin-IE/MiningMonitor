@@ -32,7 +32,8 @@ public class NotificationHelper {
         this.context = context;
         manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         builder = new NotificationCompat.Builder(context, AppConfig.ALERT_NOTIFICATION_CHANEL);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.mipmap.ic_launcher_round);
+        builder.setBadgeIconType(R.mipmap.ic_launcher_round);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             channel = new NotificationChannel(AppConfig.ALERT_NOTIFICATION_CHANEL, "Alerts", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Alert notification by pool data");
@@ -70,17 +71,17 @@ public class NotificationHelper {
         boolean isNotified = false;
         if (element.getAlert_ActiveWorkers() > element.getActiveWorkers() && element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()){
             builder.setContentTitle("Warning BTC.com " + element.getSubAccountName());
-            builder.setContentText("Low hashrate and workers");
+            builder.setContentText("Low hashrate " + element.getCurrentHashRate() + " and workers " + element.getActiveWorkers());
             isNotified = true;
         } else {
             if (element.getAlert_ActiveWorkers() > element.getActiveWorkers()) {
                 builder.setContentTitle("Warning BTC.com " + element.getSubAccountName());
-                builder.setContentText("Low count of workers");
+                builder.setContentText("Low count of workers " + element.getActiveWorkers());
                 isNotified = true;
             }else {
                 if (element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()){
                     builder.setContentTitle("Warning BTC.com " + element.getSubAccountName());
-                    builder.setContentText("Low hashrate");
+                    builder.setContentText("Low hashrate " + element.getCurrentHashRate());
                     isNotified = true;
                 }
             }
@@ -98,17 +99,17 @@ public class NotificationHelper {
         boolean isNotified = false;
         if (element.getAlert_ActiveWorkers() > element.getActiveWorkers() && element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()){
             builder.setContentTitle("Warning Ethermine.org");
-            builder.setContentText("Low hashrate and workers on wallet: " + element.getWalletAdress());
+            builder.setContentText("Low hashrate " + element.getCurrentHashRate() + " and workers " + element.getActiveWorkers());
             isNotified = true;
         }else {
             if (element.getAlert_ActiveWorkers() > element.getActiveWorkers()) {
                 builder.setContentTitle("Warning Ethermine.org");
-                builder.setContentText("Low workers on wallet: " + element.getWalletAdress());
+                builder.setContentText("Low workers " + element.getActiveWorkers());
                 isNotified = true;
             } else{
                 if (element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()) {
                     builder.setContentTitle("Warning Ethermine.org");
-                    builder.setContentText("Low hashrate on wallet: " + element.getWalletAdress());
+                    builder.setContentText("Low hashrate " + element.getCurrentHashRate());
                     isNotified = true;
                 }
             }

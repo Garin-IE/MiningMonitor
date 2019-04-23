@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mrgarin.mininmonitor.Adapters.PoolsViewOffsetDecoration;
 import com.mrgarin.mininmonitor.Adapters.WorkersAdapter;
@@ -162,27 +163,35 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        Boolean needNotify = false;
         switch (pools.get(element_id).getPoolName()){
             case "BTC.com":
                 BTCcomElement btCcomElement = (BTCcomElement) miningDashboard.pools.get(element_id);
                 if (!hashrateAlert.getText().toString().isEmpty()){
                     btCcomElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
+                    needNotify = true;
                 }
                 if (!minersAlert.getText().toString().isEmpty()){
                     btCcomElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
+                    needNotify = true;
                 }
                 break;
             case "Ethermine.org":
                 EthermineOrgElement ethermineOrgElement = (EthermineOrgElement) miningDashboard.pools.get(element_id);
                 if (!hashrateAlert.getText().toString().isEmpty()){
                     ethermineOrgElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
+                    needNotify = true;
                 }
                 if (!minersAlert.getText().toString().isEmpty()){
                     ethermineOrgElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
+                    needNotify = true;
                 }
                 break;
             default:
                 break;
+        }
+        if (needNotify){
+            Toast.makeText(getContext(), "Alerts saved", Toast.LENGTH_SHORT).show();
         }
     }
 

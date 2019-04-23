@@ -28,7 +28,7 @@ public class BasicPoolElement {
 
     public BasicPoolElement(){}
 
-    public Float getCurrentHashRate() {
+    public float getCurrentHashRate() {
         return currentHashRate;
     }
 
@@ -38,7 +38,7 @@ public class BasicPoolElement {
         }
     }
 
-    public Float getAvgHashRate() {
+    public float getAvgHashRate() {
         return avgHashRate;
     }
 

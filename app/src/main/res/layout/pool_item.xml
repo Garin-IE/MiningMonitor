@@ -8,11 +8,13 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        app:cardCornerRadius="10dp">
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/pool_name"
                 android:layout_width="match_parent"
@@ -23,19 +25,20 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hashrate"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Miners"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="Hashrate" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Miners" />
             </TableRow>
 
             <TableRow
@@ -45,30 +48,30 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Real Time"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="Real Time" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="24H AVG"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="24H AVG" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Active"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="Active" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Inactive"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="Inactive" />
             </TableRow>
 
             <TableRow
@@ -76,36 +79,36 @@
                 android:layout_height="match_parent">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:id="@+id/tv_rth"
-                    android:text="0.0"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0.0" />
+
+                <TextView
                     android:id="@+id/tv_avgh"
-                    android:text="0.0"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0.0" />
+
+                <TextView
                     android:id="@+id/tv_act_m"
-                    android:text="0"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tv_inact_m"
-                    android:text="0"
                     android:layout_weight="1"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/tv_inact_m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0" />
             </TableRow>
 
         </TableLayout>
