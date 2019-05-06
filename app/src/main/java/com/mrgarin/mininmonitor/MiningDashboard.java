@@ -1,6 +1,7 @@
 package com.mrgarin.mininmonitor;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
@@ -135,11 +136,22 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
         Log.d("myLogs", "Auto updater handler message posted");
 
-        intent = getIntent();
-        intentAction = intent.getAction();
-        if (!intentAction.equals("android.intent.action.MAIN")) {
-            onPendingIntentRecived(intentAction);
-            Log.d("myLogs", intentAction);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int elementPosition = intent.getIntExtra("position", -1);
+        Log.d("myLogs", "onNewIntent Action: " + intent.getAction());
+        Log.d("myLogs", "onNewIntent position in extra: " + elementPosition);
+        if (intent.getAction().equals("com.mrgarin.miningmonitor.ALERT_NOTIFICATION")
+                && elementPosition >= 0){
+            onAdvanceElementShow(intent.getIntExtra("position", -1));
         }
     }
 
@@ -267,4 +279,5 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 }

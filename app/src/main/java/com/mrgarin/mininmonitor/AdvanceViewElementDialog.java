@@ -167,22 +167,22 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
         switch (pools.get(element_id).getPoolName()){
             case "BTC.com":
                 BTCcomElement btCcomElement = (BTCcomElement) miningDashboard.pools.get(element_id);
-                if (!hashrateAlert.getText().toString().isEmpty()){
+                if (!hashrateAlert.getText().toString().isEmpty() && Float.valueOf(hashrateAlert.getText().toString()) != btCcomElement.getAlert_MinCurrentHashrate()){
                     btCcomElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
                     needNotify = true;
                 }
-                if (!minersAlert.getText().toString().isEmpty()){
+                if (!minersAlert.getText().toString().isEmpty() && Integer.valueOf(minersAlert.getText().toString()) != btCcomElement.getAlert_ActiveWorkers()){
                     btCcomElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
                     needNotify = true;
                 }
                 break;
             case "Ethermine.org":
                 EthermineOrgElement ethermineOrgElement = (EthermineOrgElement) miningDashboard.pools.get(element_id);
-                if (!hashrateAlert.getText().toString().isEmpty()){
+                if (!hashrateAlert.getText().toString().isEmpty() && Float.valueOf(hashrateAlert.getText().toString()) != ethermineOrgElement.getAlert_MinCurrentHashrate()){
                     ethermineOrgElement.setAlert_MinCurrentHashrate(Float.valueOf(hashrateAlert.getText().toString()));
                     needNotify = true;
                 }
-                if (!minersAlert.getText().toString().isEmpty()){
+                if (!minersAlert.getText().toString().isEmpty() && Integer.valueOf(minersAlert.getText().toString()) != ethermineOrgElement.getAlert_ActiveWorkers()){
                     ethermineOrgElement.setAlert_ActiveWorkers(Integer.valueOf(minersAlert.getText().toString()));
                     needNotify = true;
                 }

@@ -19,7 +19,7 @@ public class FabAddDialog extends AppCompatDialogFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle("Title!");
+        getDialog().setTitle("Choose pool");
         View v = inflater.inflate(R.layout.fab_add_dialog, null);
         ListView lw = v.findViewById(R.id.lv_add_dialog);
         lw.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,

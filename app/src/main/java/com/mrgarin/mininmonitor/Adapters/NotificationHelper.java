@@ -1,5 +1,6 @@
 package com.mrgarin.mininmonitor.Adapters;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,6 +27,7 @@ public class NotificationHelper {
     private NotificationCompat.Builder builder;
     private Intent intent;
     private PendingIntent pendingIntent;
+    final String alertAction = "com.mrgarin.miningmonitor.ALERT_NOTIFICATION";
 
 
     public NotificationHelper(Context context) {
@@ -43,6 +45,7 @@ public class NotificationHelper {
             manager.createNotificationChannel(channel);
         }
         intent = new Intent(context, MiningDashboard.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
     }
 
     public void sendNotification(String title, String text){
@@ -77,6 +80,7 @@ public class NotificationHelper {
             if (element.getAlert_ActiveWorkers() > element.getActiveWorkers()) {
                 builder.setContentTitle("Warning BTC.com " + element.getSubAccountName());
                 builder.setContentText("Low count of workers " + element.getActiveWorkers());
+                Log.d("myLogs", "alert: " + element.getAlert_ActiveWorkers() + " current: " + element.getActiveWorkers());
                 isNotified = true;
             }else {
                 if (element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()){
@@ -87,11 +91,15 @@ public class NotificationHelper {
             }
         }
         if (isNotified) {
-            intent.setAction(String.valueOf(i));
+            intent.setAction(alertAction);
+            intent.putExtra("position", i);
             pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            Log.d("myLogs", String.valueOf(i));
             builder.setContentIntent(pendingIntent);
             manager.notify(i, builder.build());
+        }
+        else {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(i);
         }
     }
 
@@ -105,6 +113,7 @@ public class NotificationHelper {
             if (element.getAlert_ActiveWorkers() > element.getActiveWorkers()) {
                 builder.setContentTitle("Warning Ethermine.org");
                 builder.setContentText("Low workers " + element.getActiveWorkers());
+                Log.d("myLogs", "alert: " + element.getAlert_ActiveWorkers() + " current: " + element.getActiveWorkers());
                 isNotified = true;
             } else{
                 if (element.getAlert_MinCurrentHashrate() > element.getCurrentHashRate()) {
@@ -115,11 +124,16 @@ public class NotificationHelper {
             }
         }
         if (isNotified) {
-            intent.setAction(String.valueOf(i));
-            pendingIntent = PendingIntent.getActivity(context, i, intent, pendingIntent.FLAG_UPDATE_CURRENT);
-            Log.d("myLogs", String.valueOf(i));
+            intent.setAction(alertAction);
+            intent.putExtra("position", i);
+            pendingIntent = PendingIntent.getActivity(context, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             builder.setContentIntent(pendingIntent);
+            //builder.setDefaults(Notification.DEFAULT_VIBRATE);
             manager.notify(i, builder.build());
+        }
+        else {
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel(i);
         }
     }
 }

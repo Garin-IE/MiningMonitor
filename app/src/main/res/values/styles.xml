@@ -10,4 +10,13 @@
         <item name="actionBarSize">40dp</item>
     </style>
 
+    <style name="AppTheme2" parent="Theme.AppCompat">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@android:color/background_dark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@android:color/background_dark</item>
+        <item name="actionBarSize">35dp</item>
+    </style>
+
 </resources>
