@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -92,6 +94,11 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (getIntent().getBooleanExtra("background", false)){
+            moveTaskToBack(true);
+        }
+
         setContentView(R.layout.activity_mining_dashboard);
 
         notificationHelper = new NotificationHelper(this);
@@ -135,12 +142,17 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         handler = new Handler(handlerCallback);
         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
         Log.d("myLogs", "Auto updater handler message posted");
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        if (AppConfig.reNewAutoUpdate){
+            handler.removeMessages(AUTO_UPDATE_MSG);
+            handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
+            AppConfig.reNewAutoUpdate = false;
+        }
+        SettingManager.loadPreference(this);
     }
 
     @Override
@@ -159,6 +171,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     protected void onPause() {
         super.onPause();
         poolsInstanceState.saveInstance(pools);
+        SettingManager.savePreference(this);
         Log.d("myLogs", "File Saved");
     }
 
@@ -270,14 +283,32 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         //Toast.makeText(this, "Выбран: " + pools.get(i).getPoolName(), Toast.LENGTH_LONG).show();
     }
 
-    public void onPendingIntentRecived(String intentAction){
-        onAdvanceElementShow(Integer.valueOf(intentAction));
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.options_menu, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            default:
+                break;
+            case R.id.menu_refresh:
+                refreshLayout.setRefreshing(true);
+                onRefresh();
+                break;
+            case R.id.menu_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                break;
+            case R.id.menu_about:
+                Intent aboutIntent = new Intent(this, AboutActivity.class);
+                startActivity(aboutIntent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 }

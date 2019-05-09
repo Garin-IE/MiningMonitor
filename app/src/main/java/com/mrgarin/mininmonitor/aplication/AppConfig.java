@@ -18,6 +18,18 @@ public class AppConfig {
     /******************************** end of Constants ******************************************/
 
     /******************************** Global Values *********************************************/
-    public static int autoUpdateTime = 10 * 60 * 1000;
+    public static int userAutoUpdateTime = 10;
+    private static final int timeMinutes = 60000;
+    public static int autoUpdateTime = userAutoUpdateTime * timeMinutes;
+    public static double buildVersion = 0.493;
+    public static boolean reNewAutoUpdate = false;
     /******************************** end og Global Values **************************************/
+
+    /******************************** Values Procedures *****************************************/
+    public static void setUserAutoUpdateTime(int time){
+        userAutoUpdateTime = time;
+        autoUpdateTime = userAutoUpdateTime * timeMinutes;
+        reNewAutoUpdate = true;
+    }
+    /******************************* end of Values Procedures ***********************************/
 }

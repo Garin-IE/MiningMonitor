@@ -23,7 +23,7 @@ public class BtcComAddDialog extends AppCompatDialogFragment implements View.OnC
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        getDialog().setTitle("Title!");
+        getDialog().setTitle("BTC.com");
         View v = inflater.inflate(R.layout.btc_com_add_item, container, false);
         v.setMinimumWidth(10000);
 
