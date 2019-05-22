@@ -44,7 +44,7 @@ public class WorkersAdapter extends RecyclerView.Adapter<WorkersAdapter.ViewHold
         viewHolder.reportHashrate.setText(String.format("%.2f", workers.get(i).getReportedHashrate()));
         viewHolder.currentHashrate.setText(String.format("%.2f", workers.get(i).getCurrentHashrate()));
         viewHolder.avgHashrate.setText(String.format("%.2f", workers.get(i).getAvgHashrate()));
-        Log.d("myLogs", String.valueOf(workers.get(i).getAvgHashrate()));
+        //Log.d("myLogs", String.valueOf(workers.get(i).getAvgHashrate()));
     }
 
     @Override

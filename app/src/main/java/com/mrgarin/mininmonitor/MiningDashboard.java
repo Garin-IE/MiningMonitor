@@ -21,10 +21,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mrgarin.mininmonitor.Adapters.NotificationHelper;
 import com.mrgarin.mininmonitor.Adapters.PoolTouchHelperCallback;
@@ -34,6 +37,10 @@ import com.mrgarin.mininmonitor.BTCcom.BTCComApiData;
 import com.mrgarin.mininmonitor.Data.BTCcomElement;
 import com.mrgarin.mininmonitor.Data.BTCcomLoader;
 import com.mrgarin.mininmonitor.Data.BasicPoolElement;
+import com.mrgarin.mininmonitor.Data.BinanceApiData;
+import com.mrgarin.mininmonitor.Data.BinanceCryptoPairPriceLoader;
+import com.mrgarin.mininmonitor.Data.BinanceLoader;
+import com.mrgarin.mininmonitor.Data.CryptoPrice;
 import com.mrgarin.mininmonitor.Data.EthermineOrgApiData;
 import com.mrgarin.mininmonitor.Data.EthermineOrgElement;
 import com.mrgarin.mininmonitor.Data.EthermineOrgLoader;
@@ -67,6 +74,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     Handler handler;
     Intent intent;
     String intentAction;
+    static Map<String, Double> cryptoPriceList = new HashMap<>();
 
     Handler.Callback handlerCallback = new Handler.Callback() {
         @Override
@@ -81,6 +89,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
                             }
                         });
                         updater.execute(pools);
+                        setUnpaidBalance(pools);
                         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
                         Log.d("myLogs", "Auto updater handler message posted");
                         notificationHelper.checkForAlerts(pools);
@@ -98,6 +107,8 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         if (getIntent().getBooleanExtra("background", false)){
             moveTaskToBack(true);
         }
+
+        SettingManager.loadPreference(this);
 
         setContentView(R.layout.activity_mining_dashboard);
 
@@ -138,10 +149,11 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
             }
         });
         updater.execute(pools);
+        setUnpaidBalance(pools);
 
         handler = new Handler(handlerCallback);
         handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
-        Log.d("myLogs", "Auto updater handler message posted");
+        Log.d("myLogs", "Auto updater handler message posted" + " Time: " +String.valueOf(AppConfig.autoUpdateTime));
     }
 
     @Override
@@ -152,7 +164,6 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
             handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
             AppConfig.reNewAutoUpdate = false;
         }
-        SettingManager.loadPreference(this);
     }
 
     @Override
@@ -309,6 +320,44 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setUnpaidBalance(final ArrayList<BasicPoolElement> pools){
+
+        BinanceCryptoPairPriceLoader loader = new BinanceCryptoPairPriceLoader(new BinanceCryptoPairPriceLoader.IDataResult() {
+            @Override
+            public void result(Map<String, Double> map) {
+                cryptoPriceList.putAll(map);
+                setTotalUnpaidBalance(pools);
+            }
+        });
+        loader.execute();
+    }
+
+    public void setTotalUnpaidBalance(ArrayList<BasicPoolElement> pools){
+        double totalUnpaidBalance = 0;
+        int count = pools.size();
+        for (int i=0; i < count; i++){
+            switch (pools.get(i).getPoolName()){
+                default:
+                    break;
+                case "Ethermine.org":
+                    totalUnpaidBalance += pools.get(i).getBalance()*cryptoPriceList.get("ETHUSDT");
+                    break;
+                case "BTC.com":
+                    BTCcomElement element = (BTCcomElement) pools.get(i);
+                    if (element.getCoinName().equals("BCC")){
+                        totalUnpaidBalance += element.getBalance()*cryptoPriceList.get("BCCUSDT");
+                        break;
+                    }
+                    if (element.getCoinName().equals("BTC")){
+                        totalUnpaidBalance += element.getBalance()*cryptoPriceList.get("BTCUSDT");
+                        break;
+                    }
+            }
+        }
+        TextView tv_unpaidBalance = findViewById(R.id.dashboard_unpaid_balance);
+        tv_unpaidBalance.setText(String.format("%.2f", totalUnpaidBalance) + " USD");
     }
 
 }

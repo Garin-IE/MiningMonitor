@@ -87,7 +87,7 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
                 title.setText(element.getPoolName() + " Subaccount: " + element.getSubAccountName() + " Coin: " + element.getCoinName());
                 activeMiners.setText(String.valueOf(element.getActiveWorkers()));
                 inactiveMiners.setText(String.valueOf(element.getInActiveWorkers()));
-                balance.setText(String.format("%.8f", element.getBalance()));
+                setBalance(element);
                 //balance.setText(String.valueOf(element.getBalance()));
                 currentHashrate.setText(String.valueOf(element.getCurrentHashRate()));
                 avgHashrate.setText(String.valueOf(element.getAvgHashRate()));
@@ -123,7 +123,7 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
                 title.setText(ethermineOrgElement.getPoolName() + " Wallet: " + ethermineOrgElement.getWalletAdress());
                 activeMiners.setText(String.valueOf(ethermineOrgElement.getActiveWorkers()));
                 inactiveMiners.setText(String.valueOf(ethermineOrgElement.getInActiveWorkers()));
-                balance.setText(String.format("%.8f", ethermineOrgElement.getBalance()));
+                setBalance(ethermineOrgElement);
                 //balance.setText(String.valueOf(ethermineOrgElement.getBalance()));
                 currentHashrate.setText(String.valueOf(ethermineOrgElement.getCurrentHashRate()));
                 avgHashrate.setText(String.valueOf(ethermineOrgElement.getAvgHashRate()));
@@ -142,7 +142,7 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
                                 worker.setReportedHashrate(response.body().dataResponseList.get(i).reportedHashrate/1000000);
                                 worker.setCurrentHashrate(response.body().dataResponseList.get(i).currentHashrate/1000000);
                                 worker.setAvgHashrate(response.body().dataResponseList.get(i).avgHashrate/1000000);
-                                Log.d("myLogs", worker.getWorkerName());
+                                //Log.d("myLogs", worker.getWorkerName());
                                 workers.add(worker);
                             }
                         }
@@ -201,5 +201,46 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
         super.onAttach(context);
         miningDashboard = (MiningDashboard) context;
         this.pools.addAll(miningDashboard.pools);
+    }
+
+    protected void setBalance(BasicPoolElement element){
+        switch (element.getPoolName()){
+            default:
+                break;
+            case "BTC.com":
+                BTCcomElement btCcomElement = (BTCcomElement) element;
+                if (btCcomElement.getCoinName().equals("BCC")){
+                    if (MiningDashboard.cryptoPriceList.containsKey("BCCUSDT")) {
+                        balance.setText(String.format("%.8f", element.getBalance()) + " BCC / "
+                                + String.format("%.2f", element.getBalance()
+                                * MiningDashboard.cryptoPriceList.get("BCCUSDT")) + " USD");
+                    }
+                    else{
+                        balance.setText(String.format("%.8f", element.getBalance()) + " BCC");
+                    }
+                    break;
+                }
+                if (btCcomElement.getCoinName().equals("BTC")){
+                    if (MiningDashboard.cryptoPriceList.containsKey("BTCUSDT")){
+                        balance.setText(String.format("%.8f", element.getBalance()) + " BTC / "
+                                + String.format("%.2f", element.getBalance()
+                                * MiningDashboard.cryptoPriceList.get("BCCUSDT")) + " USD");
+                    }
+                    else {
+                        balance.setText(String.format("%.8f", element.getBalance()) + " BTC");
+                    }
+                    break;
+                }
+            case "Ethermine.org":
+                if (MiningDashboard.cryptoPriceList.containsKey("ETHUSDT")){
+                    balance.setText(String.format("%.8f", element.getBalance())
+                    + " ETH / " + String.format("%.2f", element.getBalance()
+                    * MiningDashboard.cryptoPriceList.get("ETHUSDT")) + " USD");
+                }
+                else {
+                    balance.setText(String.format("%.8f", element.getBalance()) + " ETH");
+                }
+                break;
+        }
     }
 }
