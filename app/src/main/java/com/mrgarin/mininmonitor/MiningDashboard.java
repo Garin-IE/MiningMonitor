@@ -2,9 +2,12 @@ package com.mrgarin.mininmonitor;
 
 import android.Manifest;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -49,6 +52,7 @@ import com.mrgarin.mininmonitor.Data.PoolsListUpdater;
 
 import com.mrgarin.mininmonitor.Interfaces.OnAdvanceElementShow;
 import com.mrgarin.mininmonitor.Interfaces.OnPoolAdd;
+import com.mrgarin.mininmonitor.Services.MiningMonitorService;
 import com.mrgarin.mininmonitor.aplication.AppConfig;
 
 import retrofit2.Call;
@@ -61,6 +65,7 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
 
     final static int AUTO_UPDATE_MSG = 1000;
     final static int BTC_COM_GET_BALANCE = 1001;
+    final int RE_NEW_UI = 1002;
     NotificationHelper notificationHelper;
 
     BTCcomLoader btCcomLoader = new BTCcomLoader();
@@ -75,6 +80,9 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
     Intent intent;
     String intentAction;
     static Map<String, Double> cryptoPriceList = new HashMap<>();
+    ServiceConnection monitorServiceConnection;
+    MiningMonitorService monitorService;
+    boolean monitorBound = false;
 
     Handler.Callback handlerCallback = new Handler.Callback() {
         @Override
@@ -90,10 +98,21 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
                         });
                         updater.execute(pools);
                         setUnpaidBalance(pools);
-                        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
+                        //handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
                         Log.d("myLogs", "Auto updater handler message posted");
                         notificationHelper.checkForAlerts(pools);
                         break;
+                    }
+                case RE_NEW_UI:
+                    if (monitorBound){
+                        //pools.clear();
+                        //pools.addAll(monitorService.getPools());
+                        //poolsAdapter.notifyDataSetChanged();
+                        Log.d("myLogs", "MiningdDashBoard: returned pools count from service: " + monitorService.getPools().size());
+                        setPools(monitorService.getPools());
+                        setUnpaidBalance(pools);
+                        //handler.sendEmptyMessageDelayed(RE_NEW_UI, AppConfig.autoUpdateTime);
+                        Log.d("myLogs", "MiningDashboard: renew ui message sended");
                     }
             }
             return false;
@@ -109,6 +128,34 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         }
 
         SettingManager.loadPreference(this);
+        handler = new Handler(handlerCallback);
+
+        Intent serviceIntent = new Intent(this, MiningMonitorService.class);
+        monitorServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                if (AppConfig.debug){
+                    Log.d("myLogs", "MiningDashboard: onServiceConnected");
+                }
+                monitorBound = true;
+                monitorService = ((MiningMonitorService.MyBinder) service).getService();
+                if (AppConfig.debug){
+                    Log.d("myLogs", "MiningDashBoard: send first renew ui message");
+                }
+                //handler.sendEmptyMessageDelayed(RE_NEW_UI, AppConfig.autoUpdateTime);
+                monitorService.setHandler(handler);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                if (AppConfig.debug){
+                    Log.d("myLogs", "MiningDashboard: onServiceDisconnected");
+                }
+                monitorBound = false;
+            }
+        };
+        bindService(serviceIntent, monitorServiceConnection, BIND_AUTO_CREATE);
+        startService(new Intent(this, MiningMonitorService.class));
 
         setContentView(R.layout.activity_mining_dashboard);
 
@@ -151,17 +198,23 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         updater.execute(pools);
         setUnpaidBalance(pools);
 
-        handler = new Handler(handlerCallback);
-        handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
-        Log.d("myLogs", "Auto updater handler message posted" + " Time: " +String.valueOf(AppConfig.autoUpdateTime));
+        //monitorService.pushToUI(pools);
+        Log.d("myLogs", "MiningDashBoard: monitorBound = " + monitorBound);
+
+        Intent sIntent = new Intent();
+        sIntent.setAction("ReNewService");
+        sendBroadcast(sIntent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         if (AppConfig.reNewAutoUpdate){
-            handler.removeMessages(AUTO_UPDATE_MSG);
-            handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
+            //handler.removeMessages(AUTO_UPDATE_MSG);
+            //handler.sendEmptyMessageDelayed(AUTO_UPDATE_MSG, AppConfig.autoUpdateTime);
+            if (monitorBound){
+                //monitorService.reNewHandler();
+            }
             AppConfig.reNewAutoUpdate = false;
         }
     }
@@ -184,6 +237,15 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         poolsInstanceState.saveInstance(pools);
         SettingManager.savePreference(this);
         Log.d("myLogs", "File Saved");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (monitorBound) {
+            unbindService(monitorServiceConnection);
+        }
+        stopService(new Intent(this, MiningMonitorService.class));
     }
 
     @Override
@@ -360,4 +422,8 @@ public class MiningDashboard extends AppCompatActivity implements View.OnClickLi
         tv_unpaidBalance.setText(String.format("%.2f", totalUnpaidBalance) + " USD");
     }
 
+    public void setPoolsToService(){
+        poolsInstanceState.saveInstance(pools);
+        monitorService.setPools(pools);
+    }
 }

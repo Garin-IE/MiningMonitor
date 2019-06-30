@@ -16,14 +16,17 @@ public class SettingManager {
         sharedPreferences = context.getSharedPreferences(SAVED_PREFERENCE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt("updater_timer", AppConfig.userAutoUpdateTime);
+        editor.putBoolean("auto_update", AppConfig.autoUpdatePools);
         editor.commit();
-        Log.d("myLogs", "Preference Saved");
+        Log.d("myLogs", "Settings Manager: Preference Saved");
     }
 
     public static void loadPreference(Context context){
         sharedPreferences = context.getSharedPreferences(SAVED_PREFERENCE, Context.MODE_PRIVATE);
         //AppConfig.userAutoUpdateTime = sharedPreferences.getInt("updater_timer", 10);
         AppConfig.setUserAutoUpdateTime(sharedPreferences.getInt("updater_timer",10));
-        Log.d("myLogs", "Preference loaded");
+        AppConfig.autoUpdatePools = sharedPreferences.getBoolean("auto_update", true);
+        Log.d("myLogs", "Settings Manager: Preference loaded");
+        Log.d("myLogs", "Settings Manager: Timer: " + AppConfig.autoUpdateTime);
     }
 }

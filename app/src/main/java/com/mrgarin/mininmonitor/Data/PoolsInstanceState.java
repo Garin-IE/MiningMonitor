@@ -42,7 +42,7 @@ public class PoolsInstanceState {
         }catch (Exception e){
             e.printStackTrace();
             Toast.makeText(context, "Error: " + e.toString(),Toast.LENGTH_LONG).show();
-            Log.d("myLogs", "Error: " + e.toString());
+            Log.d("myLogs", "Pools Instance State: Error: " + e.toString());
         }
 
         if (AppConfig.write_debug_save_on_sd) {
@@ -56,7 +56,7 @@ public class PoolsInstanceState {
                 bufferedWriter.close();
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.d("myLogs", "Error: " + e.toString());
+                Log.d("myLogs", "Pools Instance State: Error: " + e.toString());
             }
         }
     }
@@ -70,11 +70,11 @@ public class PoolsInstanceState {
             //Log.d("myLogs", bufferedReader.readLine());
             house = mapper.readValue(bufferedReader, new TypeReference<House>() {});
             poolElements.addAll(house.poolElements);
-            Log.d("myLogs", "size in loader: " + String.valueOf(poolElements.size()));
+            Log.d("myLogs", "Pools Instance State: size in loader: " + String.valueOf(poolElements.size()));
             return poolElements;
         } catch (Exception e){
             e.printStackTrace();
-            Log.d("myLogs", e.toString());
+            Log.d("myLogs","Pools Instance State: " + e.toString());
         }
 
         return poolElements;

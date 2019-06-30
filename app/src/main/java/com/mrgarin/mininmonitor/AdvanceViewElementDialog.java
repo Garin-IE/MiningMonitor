@@ -192,6 +192,7 @@ public class AdvanceViewElementDialog extends AppCompatDialogFragment {
         }
         if (needNotify){
             Toast.makeText(getContext(), "Alerts saved", Toast.LENGTH_SHORT).show();
+            miningDashboard.setPoolsToService();
         }
     }
 

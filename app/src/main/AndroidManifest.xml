@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -15,7 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
-        <activity android:name=".SettingsActivity"></activity>
+        <service
+            android:name=".Services.MiningMonitorService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.mrgarin.miningmonitor.START_SERVICE"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".AboutActivity" />
         <activity
             android:name=".MiningDashboard"

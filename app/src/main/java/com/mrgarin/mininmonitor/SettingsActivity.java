@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.mrgarin.mininmonitor.aplication.AppConfig;
@@ -13,6 +14,7 @@ import com.mrgarin.mininmonitor.aplication.AppConfig;
 public class SettingsActivity extends AppCompatActivity {
 
     EditText updTimeValue;
+    Switch autoUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +40,15 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         updTimeValue.setOnFocusChangeListener(onFocusChangeValidator);
+        autoUpdate = findViewById(R.id.settings_autoupdswitch);
+        autoUpdate.setChecked(AppConfig.autoUpdatePools);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         onStopValidator();
+        AppConfig.autoUpdatePools = autoUpdate.isChecked();
     }
 
     protected View.OnFocusChangeListener onFocusChangeValidator = new View.OnFocusChangeListener(){

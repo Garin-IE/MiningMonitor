@@ -37,7 +37,8 @@ public class NotificationHelper {
         builder.setSmallIcon(R.mipmap.ic_launcher_round);
         builder.setBadgeIconType(R.mipmap.ic_launcher_round);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            channel = new NotificationChannel(AppConfig.ALERT_NOTIFICATION_CHANEL, "Alerts", NotificationManager.IMPORTANCE_HIGH);
+            channel = new NotificationChannel(AppConfig.ALERT_NOTIFICATION_CHANEL, "Alerts",
+                    NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Alert notification by pool data");
             channel.enableLights(true);
             channel.setLightColor(Color.RED);
@@ -52,6 +53,27 @@ public class NotificationHelper {
         builder.setContentTitle(title);
         builder.setContentText(text);
         manager.notify(1, builder.build());
+    }
+
+    public Notification getForegroundServiceNotification(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    AppConfig.SERVICE_NOTIFICATION_CHANEL, "Services",
+                    NotificationManager.IMPORTANCE_HIGH);
+            serviceChannel.setDescription("Service notifications");
+            serviceChannel.enableLights(false);
+            serviceChannel.enableVibration(false);
+            manager.createNotificationChannel(serviceChannel);
+        }
+        NotificationCompat.Builder serviceBuilder;
+        serviceBuilder = new NotificationCompat.Builder(context, AppConfig.SERVICE_NOTIFICATION_CHANEL);
+        serviceBuilder.setSmallIcon(R.mipmap.ic_launcher_round);
+        serviceBuilder.setBadgeIconType(R.mipmap.ic_launcher_round);
+        serviceBuilder.setContentTitle("Mining Monitor");
+        serviceBuilder.setContentText("Mining Monitor service updating pools data");
+        serviceBuilder.setOngoing(true);
+        serviceBuilder.setCategory(Notification.CATEGORY_SERVICE);
+        return serviceBuilder.build();
     }
 
     public void checkForAlerts(ArrayList<BasicPoolElement> pools){
